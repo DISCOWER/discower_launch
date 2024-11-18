@@ -1,68 +1,31 @@
 #!/usr/bin/env python3
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess, DeclareLaunchArgument
+from launch.actions import ExecuteProcess, DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 import os
-# from utilities.utilities import *
-
 
 def generate_launch_description():
-    """Launch Gazebo with a freeflyer running PX4 communicating over ROS 2."""
+    """Launch Gazebo with two freeflyers running PX4 communicating over ROS 2."""
+    ld = LaunchDescription()
 
-    px4_dir = os.getenv("PX4_SPACE_SYSTEMS_DIR")
-    if not px4_dir:
-        raise RunTimeError("PX4_SPACE_SYSTEMS_DIR is not set. Did you add it to your .bashrc file?")
+    # run the px4_1.launch.py script twice
+    lf_1 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [get_package_share_directory('discower_launch'), '/launch/px4_1.launch.py']),
 
-    id_to_name = {"0": "snap",
-                  "1": "crackle",
-                  "2": "pop"}
-
-    return LaunchDescription(
-        [
-            # We have the first robot always start with id 0
-            DeclareLaunchArgument("id0", default_value="0"),
-            DeclareLaunchArgument("pose0", default_value="0,0,0"),
-            ExecuteProcess(
-                cmd=[
-                    "xterm",      # or "gnome-terminal", "konsole", "xterm"
-                    "-hold",      # Keep terminal open for debugging
-                    "-e",
-                    px4_dir + "/build/px4_sitl_default/bin/px4",
-                    "-i",
-                    LaunchConfiguration("id0"),
-                    "",
-
-                ],
-                cwd=px4_dir,
-                env={**os.environ,
-                    "PX4_SIM_AUTOSTART": "4001",
-                    "PX4_SIM_SPEED_FACTOR": "1",
-                    "PX4_GZ_MODEL_POSE": LaunchConfiguration("pose0"),
-                    "PX4_SIM_MODEL": "gz_spacecraft_2d"},
-                output="screen",
-            ),
-
-            DeclareLaunchArgument("id1", default_value="1"),
-            DeclareLaunchArgument("pose1", default_value="0,1,0"),
-            ExecuteProcess(
-                cmd=[
-                    "xterm",        # or "gnome-terminal", "konsole", "xterm"
-                    "-hold",      # Keep terminal open for debugging
-                    "-e",
-                    px4_dir + "/build/px4_sitl_default/bin/px4",
-                    "-i",
-                    LaunchConfiguration("id1"),
-                    "",
-
-                ],
-                cwd=px4_dir,
-                env={**os.environ,
-                    "PX4_SIM_AUTOSTART": "4001",
-                    "PX4_SIM_SPEED_FACTOR": "1",
-                    "PX4_GZ_MODEL_POSE": LaunchConfiguration("pose1"),
-                    "PX4_SIM_MODEL": "gz_spacecraft_2d"},
-                output="screen",
-            ),
-        ]
+        launch_arguments={'id': '0', 'pose': '0,0,0', 'name': 'snap', 'delay': '0'}.items()
     )
+
+    lf_2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [get_package_share_directory('discower_launch'), '/launch/px4_1.launch.py']),
+
+        launch_arguments={'id': '1', 'pose': '0,1,0', 'name': 'crackle', 'delay': '5'}.items()
+    )
+    ld.add_action(lf_1)
+    ld.add_action(lf_2)
+    return ld
+
+

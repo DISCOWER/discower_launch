@@ -4,7 +4,6 @@ from launch import LaunchDescription
 from launch.actions import ExecuteProcess, DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 import os
-# from utilities.utilities import *
 
 
 def generate_launch_description():
@@ -14,32 +13,31 @@ def generate_launch_description():
     if not px4_dir:
         raise RunTimeError("PX4_SPACE_SYSTEMS_DIR is not set. Did you add it to your .bashrc file?")
 
-    id_to_name = {"0": "snap",
-                  "1": "crackle",
-                  "2": "pop"}
-
     return LaunchDescription(
         [
             # We have the first robot always start with id 0
             DeclareLaunchArgument("id", default_value="0"),
             DeclareLaunchArgument("pose", default_value="0,0,0"),
+            DeclareLaunchArgument("name", default_value="snap"),
+            DeclareLaunchArgument("delay", default_value="0"),
             ExecuteProcess(
                 cmd=[
                     "xterm",        # or "gnome-terminal", "konsole", "xterm"
                     "-hold",      # Keep terminal open for debugging
                     "-e",
-                    px4_dir + "/build/px4_sitl_default/bin/px4",
-                    "-i",
-                    LaunchConfiguration("id"),
-                    "",
-
+                    "bash",
+                    "-c",
+                    "sleep $PX4_DELAY && " +px4_dir+"/build/px4_sitl_default/bin/px4 -i $PX4_INSTANCE",
                 ],
                 cwd=px4_dir,
                 env={**os.environ,
                     "PX4_SIM_AUTOSTART": "4001",
                     "PX4_SIM_SPEED_FACTOR": "1",
                     "PX4_GZ_MODEL_POSE": LaunchConfiguration("pose"),
-                    "PX4_SIM_MODEL": "gz_spacecraft_2d"},
+                    "PX4_INSTANCE": LaunchConfiguration("id"),
+                    "PX4_DELAY": LaunchConfiguration("delay"),
+                    "PX4_SIM_MODEL": "gz_spacecraft_2d",
+                    "PX4_UXRCE_DDS_NS": LaunchConfiguration("name")},
                 output="screen",
             ),
         ]
