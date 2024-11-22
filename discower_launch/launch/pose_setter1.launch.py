@@ -7,7 +7,6 @@ def generate_launch_description():
     return LaunchDescription([
         # ros2 topic pub /start std_msgs/Bool "data: true"
 
-
         # Snap
         Node(
             package='discower_launch',
@@ -16,7 +15,8 @@ def generate_launch_description():
             name='pose_setter_0',
             output='screen',
             emulate_tty=True,
-            parameters=[{'time_array': '[0, 5, 10, 15]'},{'pose_array': '[[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]]'}],
+            parameters=[{'time_array': '[0, 10, 20, 30]'},
+                        {'pose_array': '[[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0]]'}],
         ),
         Node(
             package='rviz2',

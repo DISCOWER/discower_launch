@@ -6,13 +6,37 @@ from std_msgs.msg import Bool
 from geometry_msgs.msg import Point
 from geometry_msgs.msg import TransformStamped
 from geometry_msgs.msg import Pose
-from px4_msgs.msg import VehicleStatus
 import rclpy
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 from rosidl_runtime_py import set_message_fields
 from rclpy.node import Node
 
+from px4_msgs.msg import VehicleStatus
+from mpc_msgs.srv import SetPose
 
+
+class MinimalClientAsync(Node):
+
+    def __init__(self):
+        super().__init__('minimal_client_async')
+        self.cli = self.create_client(SetPose, 'set_pose')
+        while not self.cli.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('service not available, waiting again...')
+        self.req = SetPose.Request()
+
+    def send_request(self, pose):
+        self.req.pose.position.x = pose.position.x
+        self.req.pose.position.y = pose.position.y
+        self.req.pose.position.z = pose.position.z
+        self.req.pose.orientation.w = pose.orientation.w
+        self.req.pose.orientation.x = pose.orientation.x
+        self.req.pose.orientation.y = pose.orientation.y
+        self.req.pose.orientation.z = pose.orientation.z
+        self.future = self.cli.call_async(self.req)
+        rclpy.spin_until_future_complete(self, self.future)
+        return self.future.result()
+
+        
 class PoseSetter(Node):
     def __init__(self):
         super().__init__('pose_setter')
@@ -32,6 +56,12 @@ class PoseSetter(Node):
         self.pose_array = np.array(ast.literal_eval(self.pose_array),dtype=float)
         print(f"pose_array: {self.pose_array}")
 
+        self.minimal_client = MinimalClientAsync()
+        # self.cli = self.create_client(SetPose, 'set_pose')
+        # while not self.cli.wait_for_service(timeout_sec=1.0):
+        #     self.get_logger().info('service not available, waiting again...')
+        # self.req = SetPose.Request()
+
         self.status_sub = self.create_subscription(
             VehicleStatus,
             'fmu/out/vehicle_status',
@@ -44,7 +74,6 @@ class PoseSetter(Node):
             self.sync_callback,
             qos_profile
         )
-        self.set_pose_pub = self.create_publisher(Pose, 'set_pose', qos_profile)
         self.timer = self.create_timer(0.1, self.timer_callback)
         
         self.nav_state = VehicleStatus.NAVIGATION_STATE_MAX
@@ -58,7 +87,7 @@ class PoseSetter(Node):
 
     def sync_callback(self, msg):
         """Receive the start signal"""
-        if msg.data:
+        if msg.data and not self.sequence_started:
             self.sequence_started = True
             self.start_time = self.get_clock().now()
             self.get_logger().info('Sequence started')
@@ -68,6 +97,9 @@ class PoseSetter(Node):
         self.nav_state = msg.nav_state
 
     def timer_callback(self):
+        print("timer_callback")
+        print("self.sequence_started: ", self.sequence_started)
+        print("self.start_time: ", self.start_time)
         """Publish the poses from the pose array"""
         if self.sequence_started and self.start_time:
             elapsed_time = self.get_clock().now() - self.start_time
@@ -75,13 +107,30 @@ class PoseSetter(Node):
 
             # find the index of the time_array that is closest
             idx = np.argmin(np.abs(self.time_array - elapsed_time))
-            pose = self.pose_array[idx]
-            # pack it into a proper Pose message
-            pose_msg = Pose()
-            pose_msg.position.x = pose[0]
-            pose_msg.position.y = pose[1]
-            pose_msg.orientation.z = pose[2]
-            self.set_pose_pub.publish(pose_msg)
+            if idx > self.pose_idx:
+                self.pose_idx = idx
+                print(f"elapsed_time: {elapsed_time}")
+                print(f"idx: {idx}")
+                pose = self.pose_array[idx]
+                print(f"pose: {pose}")
+                # pack it into a proper Pose message
+                pose_msg = Pose()
+                pose_msg.position.x = pose[0]
+                pose_msg.position.y = pose[1]
+                pose_msg.orientation.z = pose[2]
+                self.minimal_client.send_request(pose_msg)
+
+    # def send_request(self, pose):
+    #     self.req.pose.position.x = pose.position.x
+    #     self.req.pose.position.y = pose.position.y
+    #     self.req.pose.position.z = pose.position.z
+    #     self.req.pose.orientation.w = pose.orientation.w
+    #     self.req.pose.orientation.x = pose.orientation.x
+    #     self.req.pose.orientation.y = pose.orientation.y
+    #     self.req.pose.orientation.z = pose.orientation.z
+    #     self.future = self.cli.call_async(self.req)
+    #     rclpy.spin_until_future_complete(self, self.future)
+    #     return self.future.result()
 
 
 def main(args=None):
