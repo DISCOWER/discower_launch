@@ -11,7 +11,7 @@ def generate_launch_description():
 
     px4_dir = os.getenv("PX4_SPACE_SYSTEMS_DIR")
     if not px4_dir:
-        raise RunTimeError("PX4_SPACE_SYSTEMS_DIR is not set. Did you add it to your .bashrc file?")
+        raise RuntimeError("PX4_SPACE_SYSTEMS_DIR is not set. Did you add it to your .bashrc file?")
 
     return LaunchDescription(
         [
