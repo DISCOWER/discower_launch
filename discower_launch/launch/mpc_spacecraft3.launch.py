@@ -44,6 +44,14 @@ import os
 def generate_launch_description():
     
     return LaunchDescription([
+        Node(
+            package='rviz2',
+            namespace='snap',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', [os.path.join(get_package_share_directory('px4_mpc'), 'config.rviz')]]
+        ),
+
         # Snap
         Node(
             package='px4_mpc',
@@ -52,13 +60,6 @@ def generate_launch_description():
             name='rviz_pos_marker_0',
             output='screen',
             emulate_tty=True,
-        ),
-        Node(
-            package='rviz2',
-            namespace='snap',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', [os.path.join(get_package_share_directory('px4_mpc'), 'config.rviz')]]
         ),
         Node(
             package='px4_mpc',

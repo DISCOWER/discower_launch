@@ -13,14 +13,14 @@ def generate_launch_description():
     # run the px4_1.launch.py script twice
     lf_1 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            [get_package_share_directory('discower_launch'), '/launch/px4_1.launch.py']),
+            [get_package_share_directory('discower_launch'), '/px4_1.launch.py']),
 
         launch_arguments={'id': '0', 'pose': '0,0,0', 'name': 'snap', 'delay': '0'}.items()
     )
 
     lf_2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            [get_package_share_directory('discower_launch'), '/launch/px4_1.launch.py']),
+            [get_package_share_directory('discower_launch'), '/px4_1.launch.py']),
 
         launch_arguments={'id': '1', 'pose': '0,1,0', 'name': 'crackle', 'delay': '5'}.items()
     )
