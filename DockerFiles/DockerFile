@@ -142,9 +142,11 @@ RUN cd $home && git clone https://github.com/acados/acados.git && \
     cmake -DACADOS_WITH_QPOASES=ON -DACADOS_WITH_OSQP=ON -DACADOS_WITH_QPDUNES=ON .. && \
     make install -j4 && \
     pip install -e $home/acados/interfaces/acados_template && \
-    echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:$HOME/acados/lib" >> $home/.bashrc && \
+    echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:$HOME/acados/lib"' >> $home/.bashrc && \
     echo 'export "ACADOS_SOURCE_DIR="$HOME/acados"' >> $home/.bashrc
 
+### Some other dependencies
+RUN pip install rosbags
 
 ## Set runtime directory environment variable
 ENV XDG_RUNTIME_DIR=/tmp/runtime-root
