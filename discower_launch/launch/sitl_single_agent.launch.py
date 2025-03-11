@@ -14,7 +14,7 @@ def generate_launch_description():
     # Run the Gazebo simulator and the PX4 SITL simulation. 
     lf_1 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            [get_package_share_directory('push_stl'), '/px4.launch.py']),
+            [get_package_share_directory('discower_launch'), '/px4.launch.py']),
 
         launch_arguments={'id': '0', 'pose': '-0.5,-0.75,0', 'name': 'crackle', 'delay': '0'}.items()
     )
