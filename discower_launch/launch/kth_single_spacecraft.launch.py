@@ -38,7 +38,7 @@ def launch_px4(context, *args, **kwargs):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("id", default_value="0"),
-        DeclareLaunchArgument("pose", default_value="0,0,0"),
+        DeclareLaunchArgument("pose", default_value="2,0,0"),
         DeclareLaunchArgument("name", default_value="snap"),
         DeclareLaunchArgument("delay", default_value="0"),
 
