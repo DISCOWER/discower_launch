@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.actions import ExecuteProcess, DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
-from launch.actions import ExecuteProcess
 import os
 
 def launch_px4(context, *args, **kwargs):
@@ -14,6 +13,8 @@ def launch_px4(context, *args, **kwargs):
     pose = LaunchConfiguration("pose").perform(context)
     name = LaunchConfiguration("name").perform(context)
     delay = LaunchConfiguration("delay").perform(context)
+
+    model_name = f"spacecraft_2d_{id_}"
 
     return [
         ExecuteProcess(
@@ -31,6 +32,16 @@ def launch_px4(context, *args, **kwargs):
                 "PX4_UXRCE_DDS_NS": name,
                 "PX4_GZ_WORLD": "kth_space_lab"
             },
+            output="screen"
+        ),
+
+        # Odometry bridge with remap
+        ExecuteProcess(
+            cmd=[
+                "ros2", "run", "ros_gz_bridge", "parameter_bridge",
+                f"/model/{model_name}/odometry@nav_msgs/msg/Odometry@gz.msgs.Odometry",
+                "--ros-args", "-r", f"/model/{model_name}/odometry:=/{name}/odom"
+            ],
             output="screen"
         )
     ]

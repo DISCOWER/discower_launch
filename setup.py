@@ -19,6 +19,5 @@ setup(
     maintainer_email='jorisv@kth.se',
     description='simple SITL launch files for single- and multi-agent simulation of the ATMOS platform',
     license='BSD 3-Clause',
-    tests_require=['pytest'],
     entry_points={},
 )
