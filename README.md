@@ -1,6 +1,6 @@
 # discower_launch: SITL launch files for Single and Multi-agent experiments
 
-This repository contains launch files indicating how a single and multiple ATMOS space platform SITL simulation can be started.  
+This repository contains launch files indicating how a single and multiple ATMOS space platform SITL simulation can be started.
 The dependencies for launching the SITL simulation are
 - [PX4-Space-Systems](https://github.com/DISCOWER/PX4-Space-Systems)
 - [px4_msgs](https://github.com/DISCOWER/px4_msgs)
