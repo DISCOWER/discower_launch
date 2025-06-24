@@ -4,7 +4,7 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction, ExecuteProcess
 from launch.substitutions import LaunchConfiguration
 import os
 
-def launch_px4_with_bridge(context, *args, **kwargs):
+def launch_px4(context, *args, **kwargs):
     px4_dir = os.getenv("PX4_SPACE_SYSTEMS_DIR")
     if not px4_dir:
         raise RuntimeError("PX4_SPACE_SYSTEMS_DIR is not set. Did you add it to your .bashrc file?")
@@ -18,7 +18,9 @@ def launch_px4_with_bridge(context, *args, **kwargs):
 
     model_name = f"{model}_{id_}"
 
-    return [
+    use_odom_bridge = LaunchConfiguration("use_odom_bridge").perform(context).lower() == "true"
+
+    processes = [
         ExecuteProcess(
             cmd=[
                 "bash", "-c",
@@ -37,17 +39,22 @@ def launch_px4_with_bridge(context, *args, **kwargs):
                 "PX4_GZ_WORLD": world
             },
             output="screen"
-        ),
-
-        ExecuteProcess(
-            cmd=[
-                "ros2", "run", "ros_gz_bridge", "parameter_bridge",
-                f"/model/{model_name}/odometry@nav_msgs/msg/Odometry@gz.msgs.Odometry",
-                "--ros-args", "-r", f"/model/{model_name}/odometry:=/{name}/odom"
-            ],
-            output="screen"
         )
     ]
+
+    if use_odom_bridge:
+        processes.append(
+            ExecuteProcess(
+                cmd=[
+                    "ros2", "run", "ros_gz_bridge", "parameter_bridge",
+                    f"/model/{model_name}/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry",
+                    "--ros-args", "-r", f"/model/{model_name}/odometry:=/{name}/odom"
+                ],
+                output="screen"
+            )
+        )
+
+    return processes
 
 def generate_launch_description():
     return LaunchDescription([
@@ -56,6 +63,7 @@ def generate_launch_description():
         DeclareLaunchArgument("name", default_value="snap"),
         DeclareLaunchArgument("delay", default_value="0"),
         DeclareLaunchArgument("world", default_value=""),
+        DeclareLaunchArgument("use_odom_bridge", default_value="false"),
 
-        OpaqueFunction(function=launch_px4_with_bridge)
+        OpaqueFunction(function=launch_px4)
     ])

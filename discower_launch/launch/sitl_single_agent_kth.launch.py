@@ -16,7 +16,8 @@ def generate_launch_description():
                 'pose': '2,0,0',
                 'name': 'snap',
                 'delay': '0',
-                'world': 'kthspacelab'
+                'world': 'kthspacelab',
+                'use_odom_bridge': 'true',
             }.items()
         )
     ])

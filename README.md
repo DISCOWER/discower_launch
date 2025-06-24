@@ -1,11 +1,14 @@
 # discower_launch: SITL launch files for Single and Multi-agent experiments
 
 This repository contains launch files indicating how a single and multiple ATMOS space platform SITL simulation can be started.
-The dependencies for launching the SITL simulation are
+
+## Dependencies
+
 - [PX4-Space-Systems](https://github.com/DISCOWER/PX4-Space-Systems)
 - [px4_msgs](https://github.com/DISCOWER/px4_msgs)
 
 As this repository contains simple examples to merely run the SITL, you might need to follow additional instructions in the `PX4-Space-Systems` repository to fully get started. In short, you additionally need to
+
 - build the workspace: `colcon build --symlink-install`
 - start the microros service: `micro-xrce-dds-agent udp4 -p 8888`
 
@@ -13,12 +16,32 @@ After that, you can display the robot's topics with `ros2 topic list`. Then, you
 
 Further details can be found on the [ATMOS website](https://atmos.discower.io/pages/Simulation/)
 
+## Launch files overview
+
+This package provides four main launch files:
+
+- `sitl_single_agent.launch.py`: Launches a single agent on the default PX4 world.
+- `sitl_multi_agent.launch.py`: Launches multiple agents on the default PX4 world.
+- `sitl_single_agent_kth.launch.py`: Launches a single agent in the KTH Space Lab world **with** Gazebo-ROS odometry bridging enabled.
+- `sitl_multi_agent_kth.launch.py`: Launches multiple agents in the KTH Space Lab world **with** Gazebo-ROS odometry bridging enabled.
+
+> **Note:** Gazebo-ROS odometry bridging requires the additional ROS package  
+> `ros-[ros2-distro]-ros-gzharmonic-bridge`.  
+> You can install it via, e.g. for Humble:
+>
+> ```bash
+> sudo apt install ros-humble-ros-gzharmonic-bridge
+> ```
+
+The bridged odometry simulates the motion capture system used in the real KTH Space Lab and publishes ground-truth data from Gazebo to ROS.
+
 ## Testing a Multi-Agent setup
 
 First make sure that your environment variable for `PX4_SPACE_SYSTEMS_DIR` is set. This can be checked with:
+
 ```bash
 echo $PX4_SPACE_SYSTEMS_DIR
-````
+```
 
 If this is not set, you can set it at the end of your `.bashrc` (or `.zshrc`) file with:
 

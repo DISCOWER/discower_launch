@@ -19,7 +19,8 @@ def generate_launch_description():
             'pose': '1,0,0.2',
             'name': 'snap',
             'delay': '0',
-            'world': 'kthspacelab'
+            'world': 'kthspacelab',
+            'use_odom_bridge': 'true',
         }.items()
     )
 
@@ -31,7 +32,8 @@ def generate_launch_description():
             'pose': '2,0,0.2',
             'name': 'crackle',
             'delay': '5',
-            'world': 'kthspacelab'
+            'world': 'kthspacelab',
+            'use_odom_bridge': 'true',
         }.items()
     )
 
@@ -43,7 +45,8 @@ def generate_launch_description():
             'pose': '3,0,0.2',
             'name': 'pop',
             'delay': '5',
-            'world': 'kthspacelab'
+            'world': 'kthspacelab',
+            'use_odom_bridge': 'true',
         }.items()
     )
 
