@@ -13,9 +13,10 @@ def launch_px4_with_bridge(context, *args, **kwargs):
     pose = LaunchConfiguration("pose").perform(context)
     name = LaunchConfiguration("name").perform(context)
     delay = LaunchConfiguration("delay").perform(context)
+    model = LaunchConfiguration("model").perform(context) if "model" in context.launch_configurations else "spacecraft_2d"
     world = LaunchConfiguration("world").perform(context)
 
-    model_name = f"spacecraft_2d_{id_}"
+    model_name = f"{model}_{id_}"
 
     return [
         ExecuteProcess(
@@ -31,7 +32,7 @@ def launch_px4_with_bridge(context, *args, **kwargs):
                 "PX4_GZ_MODEL_POSE": pose,
                 "PX4_INSTANCE": id_,
                 "PX4_DELAY": delay,
-                "PX4_SIM_MODEL": "gz_spacecraft_2d",
+                "PX4_SIM_MODEL": f"gz_{model}",
                 "PX4_UXRCE_DDS_NS": name,
                 "PX4_GZ_WORLD": world
             },

@@ -5,7 +5,7 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
-    """Launch multiple spacecrafts in the kth_space_lab world with PX4 and ROS 2."""
+    """Launch multiple spacecrafts in the kthspacelab world with PX4 and ROS 2."""
     ld = LaunchDescription()
 
     # Path to the shared px4 launcher
@@ -19,7 +19,7 @@ def generate_launch_description():
             'pose': '1,0,0.2',
             'name': 'snap',
             'delay': '0',
-            'world': 'kth_space_lab'
+            'world': 'kthspacelab'
         }.items()
     )
 
@@ -31,7 +31,7 @@ def generate_launch_description():
             'pose': '2,0,0.2',
             'name': 'crackle',
             'delay': '5',
-            'world': 'kth_space_lab'
+            'world': 'kthspacelab'
         }.items()
     )
 
@@ -43,7 +43,7 @@ def generate_launch_description():
             'pose': '3,0,0.2',
             'name': 'pop',
             'delay': '5',
-            'world': 'kth_space_lab'
+            'world': 'kthspacelab'
         }.items()
     )
 

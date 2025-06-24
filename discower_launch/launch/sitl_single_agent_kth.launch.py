@@ -5,7 +5,7 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
-    """Launch Gazebo with a spacecraft in the kth_space_lab world and ROS bridge."""
+    """Launch Gazebo with a spacecraft in the kthspacelab world and ROS bridge."""
     px4_launch_path = [get_package_share_directory('discower_launch'), '/px4.launch.py']
 
     return LaunchDescription([
@@ -16,7 +16,7 @@ def generate_launch_description():
                 'pose': '2,0,0',
                 'name': 'snap',
                 'delay': '0',
-                'world': 'kth_space_lab'
+                'world': 'kthspacelab'
             }.items()
         )
     ])

@@ -32,7 +32,7 @@ Then, test the multi-agent setup by running the following command:
 ros2 launch discower_launch sitl_multi_agent.launch.py
 ```
 
-> Alternatively, if you want to simulate in the `kth_space_lab` world and use the Gazebo-ROS bridge, you can run:
+> Alternatively, if you want to simulate in the `kthspacelab` world and use the Gazebo-ROS bridge, you can run:
 
 ```bash
 ros2 launch discower_launch sitl_multi_agent_kth.launch.py
@@ -47,7 +47,7 @@ lf_3 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             [get_package_share_directory('discower_launch'), '/px4.launch.py']),
 
-        launch_arguments={'id': '3', 'pose': '-1.0, 1.75, 0', 'name': 'snap', 'delay': '10', 'world': 'kth_space_lab'}.items()
+        launch_arguments={'id': '3', 'pose': '-1.0, 1.75, 0', 'name': 'snap', 'delay': '10', 'world': 'kthspacelab'}.items()
     )
 
 ld.add_action(lf_3)
