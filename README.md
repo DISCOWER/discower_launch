@@ -1,6 +1,6 @@
 # discower_launch: SITL launch files for Single and Multi-agent experiments
 
-This repository contains launch files indicating how a single and multiple ATMOS space platform SITL simulation can be started.
+This repository contains launch files for running Single and Multi-agent ATMOS platform SITL simulations.
 
 ## Dependencies
 
@@ -25,13 +25,19 @@ This package provides four main launch files:
 - `sitl_single_agent_kth.launch.py`: Launches a single agent in the KTH Space Lab world **with** Gazebo-ROS odometry bridging enabled.
 - `sitl_multi_agent_kth.launch.py`: Launches multiple agents in the KTH Space Lab world **with** Gazebo-ROS odometry bridging enabled.
 
-> **Note:** Gazebo-ROS odometry bridging requires the additional ROS package  
-> `ros-[ros2-distro]-ros-gzharmonic-bridge`.  
-> You can install it via, e.g. for Humble:
+> **Note:** Gazebo-ROS odometry bridging requires an additional ROS package depending on your ROS2 distribution:
 >
-> ```bash
-> sudo apt install ros-humble-ros-gzharmonic-bridge
-> ```
+> - **ROS2 Humble:**
+>
+>   ```bash
+>   sudo apt install ros-humble-ros-gzharmonic-bridge
+>   ```
+>
+> - **ROS2 Jazzy:**
+>
+>   ```bash
+>   sudo apt install ros-jazzy-ros-gz-bridge
+>   ```
 
 The bridged odometry simulates the motion capture system used in the real KTH Space Lab and publishes ground-truth data from Gazebo to ROS.
 
