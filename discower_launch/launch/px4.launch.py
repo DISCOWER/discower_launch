@@ -20,16 +20,16 @@ def launch_px4(context, *args, **kwargs):
     pose = LaunchConfiguration("pose").perform(context)     # Initial pose of the PX4 instance (string, e.g. "0,0,0")
     name = LaunchConfiguration("name").perform(context)     # Name/namespace of the PX4 instance (string, e.g. "snap")
     delay = LaunchConfiguration("delay").perform(context)   # Delay before starting the PX4 instance (string, e.g. "0")
-    model = LaunchConfiguration("model").perform(context)   # Model to use for the PX4 instance (string, e.g. "atmos" or "uuv")
+    model = LaunchConfiguration("model").perform(context)   # Model to use for the PX4 instance (string, e.g. "atmos" or "bluerov")
     world = LaunchConfiguration("world").perform(context)
     model_name = f"{model}_{id_}"
 
     target = 'px4_sitl_spacecraft'
     if model:
-        target = 'px4_sitl_uuv' if model == "uuv" else target
-    gz_model = 'gz_spacecraft'
+        target = 'px4_sitl_uuv' if model == "bluerov" else target
+    gz_model = 'gz_atmos'
     if model:
-        gz_model = 'gz_uuv_bluerov2_heavy' if model == "uuv" else gz_model
+        gz_model = 'gz_uuv_bluerov2_heavy' if model == "bluerov" else gz_model
 
     use_odom_bridge = LaunchConfiguration("use_odom_bridge").perform(context).lower() == "true"
 
