@@ -53,6 +53,6 @@ def generate_launch_description():
     # Add all to launch description
     ld.add_action(spacecraft_0)
     ld.add_action(spacecraft_1)
-    ld.add_action(spacecraft_2)
+    # ld.add_action(spacecraft_2)
 
     return ld

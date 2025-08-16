@@ -16,7 +16,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             [get_package_share_directory('discower_launch'), '/px4.launch.py']),
 
-        launch_arguments={'id': '0', 'pose': '-0.5,-0.75,0', 'name': 'crackle', 'delay': '0'}.items()
+        launch_arguments={'id': '0', 'pose': '-0.5,-0.75,0', 'name': 'snap', 'delay': '0'}.items()
     )
     ld.add_action(lf_1)
 

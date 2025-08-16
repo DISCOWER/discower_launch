@@ -13,7 +13,7 @@ def launch_px4(context, *args, **kwargs):
     pose = LaunchConfiguration("pose").perform(context)
     name = LaunchConfiguration("name").perform(context)
     delay = LaunchConfiguration("delay").perform(context)
-    model = LaunchConfiguration("model").perform(context) if "model" in context.launch_configurations else "spacecraft_2d"
+    model = LaunchConfiguration("model").perform(context) if "model" in context.launch_configurations else "atmos"
     world = LaunchConfiguration("world").perform(context)
 
     model_name = f"{model}_{id_}"
@@ -24,12 +24,12 @@ def launch_px4(context, *args, **kwargs):
         ExecuteProcess(
             cmd=[
                 "bash", "-c",
-                f"sleep {delay} && {px4_dir}/build/px4_sitl_default/bin/px4 -i {id_}"
+                f"sleep {delay} && {px4_dir}/build/px4_sitl_spacecraft/bin/px4 -i {id_}"
             ],
             cwd=px4_dir,
             env={
                 **os.environ,
-                "PX4_SIM_AUTOSTART": "71002",
+                "PX4_SIM_AUTOSTART": "70000",
                 "PX4_SIM_SPEED_FACTOR": "1",
                 "PX4_GZ_MODEL_POSE": pose,
                 "PX4_INSTANCE": id_,
